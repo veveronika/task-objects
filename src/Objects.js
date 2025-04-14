@@ -1,34 +1,36 @@
 export function personUpdate(data) {
-  if (data.gender === 'female') {
-    if ('age' in data) {
-      delete data.age;
-    }
-  } else if (data.gender === 'male') {
-    if (!('income' in data)) {
-      data.income = 100000;
+  const result = { ...data };
+
+  if (result.gender === 'female') {
+    delete result.age;
+  } else if (result.gender === 'male') {
+    if (!('income' in result)) {
+      result.income = 100000;
     }
   }
-  return data;
+
+  return result;
 }
 
 export function objectFieldsList(obj1, obj2, obj3) {
-  const fields = new Set();
+  const keysSet = new Set([
+    ...Object.keys(obj1),
+    ...Object.keys(obj2),
+    ...Object.keys(obj3),
+  ]);
+  return Array.from(keysSet).sort();
+}
 
-  [obj1, obj2, obj3].forEach(obj => {
-    Object.keys(obj).forEach(key => fields.add(key));
-  });
-
-  return Array.from(fields).sort();
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 export function objectClone(obj, count) {
   const clones = [];
-
   for (let i = 0; i < count; i++) {
-    const clone = JSON.parse(JSON.stringify(obj));
-    clone.id = i + 1;
+    const clone = deepClone(obj);
+    clone.id = i;
     clones.push(clone);
   }
-
   return clones;
 }
